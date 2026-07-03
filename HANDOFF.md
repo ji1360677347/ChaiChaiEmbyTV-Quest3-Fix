@@ -1,5 +1,28 @@
 # ChaiChaiEmbyTV Quest 3 输入问题交接说明
 
+> **2026-07-03 更新 4（v27）**：进度条可直接点击/拖动（底部条带 y∈0.66h-0.84h
+> 内按下=绝对定位模式）；拖动实时 seek（500ms 节流+UP 精确落点）；新增
+> 9924 键（seek 后注入，仅 `sd1.d0(k)` 刷新控制栏计时，拖动中控制栏不再
+> 消失）。进度条几何是**动态**的（时间文字位数挤压弹性布局，用户发现）：
+> `L=(0.043574+0.006866*nl)*vw, R=(0.95598-0.006866*nr)*vw`，nl/nr 由
+> questTimeChars(位置/时长) 算（4/5/7/8 字符）。同格式区域点击→knob 偏差
+> 0px；跨位数边界 seek 有 ±18px 布局重排残差（固有）。教训：getX()=view
+> 本地坐标；DisplayMetrics.widthPixels=窗口宽≠物理屏宽；标定用"seek 日志
+> pos+knob 像素扫描"自校准。APK：
+> `outputs/ChaiChaiEmbyTV-0.3.0-alpha6-player-wake-v27.apk`
+> (SHA256 `39c4c5916cd3972c1433cfeae2418594da1171ff22be37519a030c2d8c729dfe`)，
+> 已复制 `~/Downloads/`。release 上仍是 v25。详见 `work/release-notes-v27.md`。
+
+> **2026-07-03 更新 3（v26）**：修复①播放页进度条无法拖动（Compose 进度条
+> 不消费指针拖动，事件穿透到 PlayerView）——PlayerView.onTouchEvent 接管
+> 手势：|dx|>100px 的水平拖动 → 相对 seek（全屏宽=全片长），小位移仍走
+> tap→9923→toggle；②剧集列表倒序——`p80` 的 `sort_descending` prefs 默认值
+> true→false（app 内有切换入口 w40，切换后持久化）。模拟器双向 seek、tap、
+> 集数升序均验证通过。APK：
+> `outputs/ChaiChaiEmbyTV-0.3.0-alpha6-player-wake-v26.apk`
+> (SHA256 `ff4d0dab6706b12c0d50d5c99ba2eb48d6443d24610fc5c0b2d0053b196329b2`)，
+> 已复制 `~/Downloads/`，release 尚未上传 v26。详见 `work/release-notes-v26.md`。
+
 > **2026-07-03 更新 2（v25）**：v24 触屏验证通过但用户鼠标实测仍复现——
 > `ua1->a` 是"焦点在控制栏元素上"状态，鼠标 hover 按钮后 a=true，
 > W/X 整条链路被 block（原生设计：焦点在按钮时确认键交给按钮）。
