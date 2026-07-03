@@ -1,5 +1,15 @@
 # ChaiChaiEmbyTV Quest 3 输入问题交接说明
 
+> **2026-07-04 更新（v28）**：Quest 3 实机反馈"点进度条不跳、拖动可以"——
+> v27 的条带判定与 x 几何是像素比例基准，实机分辨率/密度不同导致错位。
+> v28 全部 dp 化：条带=距底 75-135dp，x 几何 = 37.714/38.095dp pad +
+> 5.9429dp/字符，运行时乘 DisplayMetrics.density。模拟器回归 -1px。
+> 已上传 release（universal `d7ed3149…`、arm64 `0d046504…`）并更新 body。
+> 实机若仍不准：抓 QuestWake 日志看点击走 tap 还是 drag seek abs=true/false
+> 定位（详见 work/release-notes-v28.md）。release 上 v22/v25/v27 旧资产
+> 待用户手动清理（delete-asset 被会话权限拦截）。
+
+
 > **2026-07-03 更新 4（v27）**：进度条可直接点击/拖动（底部条带 y∈0.66h-0.84h
 > 内按下=绝对定位模式）；拖动实时 seek（500ms 节流+UP 精确落点）；新增
 > 9924 键（seek 后注入，仅 `sd1.d0(k)` 刷新控制栏计时，拖动中控制栏不再
