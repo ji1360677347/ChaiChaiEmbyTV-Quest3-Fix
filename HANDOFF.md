@@ -1,5 +1,36 @@
 # ChaiChaiEmbyTV Quest 3 输入问题交接说明
 
+> **2026-07-05 更新 3（v32）**：v31 注入方案失败根因=指针点开面板时**焦点
+> 不进面板**（onPreviewKeyEvent 收不到注入键，super=false）。v32 改直调：
+> 8 个面板 handler（os1/he0/nz1/sf/ar1/g00/ev/gz0）构造后 sput 到
+> `questmc.h` 静态槽；点击=setValue(索引)+box-impl 包装 KeyEvent(23)
+> 直接 h.invoke(down/up)，绕过焦点系统。菜单项 clickable 补丁扩到
+> rf 两分支+ge0 三分支。模拟器验证选集切换 S1E006 成功。APK v32
+> (`23c20c9c…`) 已复制 Downloads。详见 work/release-notes-v32.md。
+
+
+> **2026-07-05 更新 2（v31）**：播放页 SelectionOverlay 一族（字幕/音轨/
+> 倍速/选集/解码菜单，qs1+rf/os1）是纯遥控设计（item 只有 focusable，
+> Enter 逻辑在容器 onPreviewKeyEvent 用索引 state）。v31 新增 questmc.smali：
+> 菜单项包 clickable，点击=setValue(索引)+注入 23（焦点在菜单时 ua1->a=true
+> 放行）。菜单项渲染 lambda 共三处，全部已补：rf 默认分支（字幕选择）、
+> rf pswitch_0 分支、ge0（转码质量/解码模式等 MoreMenuOverlay 体系）。
+> 模拟器验证：字幕切换成功（"已记住字幕选择"）、解码模式切换触发 ✓。
+> APK v31 final (`a3284b8d…`) 已复制 Downloads。详见 work/release-notes-v31.md。
+
+> **2026-07-05 更新（v30）**：修复"二级选项无法点击"——TV Material 的
+> selectable Surface（选集面板卡片/剧集卡片/海报卡片/弹窗选项）走
+> `SurfaceSelectableUtilsKt.tvSelectable`，v18 只补了 clickable 版本。
+> v30 照同样模式给 tvSelectable 插 `ClickableKt.clickable`。模拟器验证
+> 海报/剧集卡片/弹窗按钮 tap 全部可点。
+> ⚠️ 失败尝试：给 EpisodePlayDialog（z30）内容加 verticalScroll 修"弹窗
+> 贴顶/裁剪"→ ANR（文本测量风暴），已还原，勿重试该方案。
+> "提示没有居中"待用户 Quest 3 截图确认具体指什么后再修。
+> APK：`outputs/ChaiChaiEmbyTV-0.3.0-alpha6-player-wake-v30.apk`
+> (SHA256 `25927a27ffc351df9c59b204d99714e6e23a6554314c307026a18707ec1a0ee8`)，
+> 已复制 `~/Downloads/`。release 上仍是 v28。详见 `work/release-notes-v30.md`。
+
+
 > **✅ 2026-07-04：v28 经 Quest 3 实机验证通过，项目目标达成。**
 > 全部输入问题（控制栏唤醒、点击暂停/恢复、进度条点击/拖动定位、剧集排序、
 > 按钮、输入框键盘）在实机确认可用。当前发布版本 v28。
