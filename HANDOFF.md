@@ -1,5 +1,33 @@
 # ChaiChaiEmbyTV Quest 3 输入问题交接说明
 
+> **2026-07-28 更新（v34）**：修正 v33 对详情页排序回跳协程的误判。
+> `a60` 实际负责另一个媒体列表，已恢复为基础版本；真正负责剧集横向栏初始
+> 定位的是 `z50`。现在 `w40` 切换正/倒序时设置的一次性标记由 `z50`
+> 消费：列表重排后直接以新列表首项为目标（索引 0），不再用当前集 ID
+> 查找并滚动。因此倒序时停在较后集数一端，不会因为当前集是第 1 集而拉到
+> 最右端；正常进入详情页时仍按当前集定位。修改结果在
+> `work/decoded-fullres-v34`。模拟器使用 mouse source 连续切换两次，
+> 每次日志均为 `episode sort toggle requested` →
+> `episode sort -> rail starts at sorted first item`，无崩溃或字节码校验错误。
+> APK v34 SHA256
+> `5df5267ee88bd8833fe207318a506459df9ad148fd7e3cd94ebb6c723e84999b`。
+> 详见 `work/release-notes-v34.md`。
+
+> **2026-07-28 更新（v33）**：修复两个交互问题。① 播放页隐藏控制栏时，
+> `MainActivity` 先用自定义 keyCode 9925 向 Compose 查询真实可见状态；
+> `PlayerView.onTouchEvent` 在隐藏状态把任何首次短按只标记为唤醒，不执行
+> 进度条 seek；9923 处理改为只显示控制栏并刷新隐藏计时，不再调用
+> `setPlayWhenReady`，因此单击画面不暂停。控制栏显示后的第二次点击仍交给
+> 原控件处理。② 详情页 `w40` 切换正/倒序时设置一次性标记；真正负责剧集行
+> 自动定位的 `a60` 在列表重排后将目标改为索引 0，不再按当前集 ID 回跳。
+> 修改基于 `work/decoded-fullres-v18`，完整结果在
+> `work/decoded-fullres-v33`。模拟器验证隐藏状态点击画面仍持续播放、隐藏
+> 状态点击进度条区域无 seek、排序日志依次为
+> `episode sort toggle requested` →
+> `episode sort -> keep list at first item`。APK v33 SHA256
+> `6fa12a0e8db88d9bef234d16b4036c8e862e92d045eaf4336271e0682ccfec34`，
+> 已覆盖安装到 `emulator-5554`。详见 `work/release-notes-v33.md`。
+
 > **2026-07-05 更新 3（v32）**：v31 注入方案失败根因=指针点开面板时**焦点
 > 不进面板**（onPreviewKeyEvent 收不到注入键，super=false）。v32 改直调：
 > 8 个面板 handler（os1/he0/nz1/sf/ar1/g00/ev/gz0）构造后 sput 到
